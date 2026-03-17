@@ -1,1 +1,101 @@
+<!DOCTYPE html>
+<html>
 
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Fantasy Golf Dashboard</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#0b1020;
+color:white;
+margin:0;
+padding:20px;
+}
+
+h1{
+text-align:center;
+margin-bottom:40px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+padding:12px;
+border-bottom:1px solid #333;
+text-align:left;
+}
+
+th{
+color:#aaa;
+}
+
+.player{
+font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Fantasy Golf Dashboard</h1>
+
+<table>
+
+<thead>
+<tr>
+<th>POS</th>
+<th>PLAYER</th>
+<th>SCORE</th>
+<th>THRU</th>
+</tr>
+</thead>
+
+<tbody id="players"></tbody>
+
+</table>
+
+<script>
+
+async function loadLeaderboard(){
+
+const res = await fetch("/api/leaderboard");
+
+const data = await res.json();
+
+const tbody = document.getElementById("players");
+
+tbody.innerHTML="";
+
+data.players.forEach(p=>{
+
+const row=document.createElement("tr");
+
+row.innerHTML=`
+<td>${p.pos || "-"}</td>
+<td class="player">${p.name}</td>
+<td>${p.score || "-"}</td>
+<td>${p.thru || "-"}</td>
+`;
+
+tbody.appendChild(row);
+
+});
+
+}
+
+loadLeaderboard();
+
+setInterval(loadLeaderboard,30000);
+
+</script>
+
+</body>
+</html>
